@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Portal Distributor</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--blue:#3F4BBF;--blue-d:#2E3A9E;--violet:#6B4FC0;--violet-d:#523A9F;--ink:#1A1D45;--muted:#565B7A;--bg:#F9FAFF;--surface:#FFFFFF;--line:#E8EAF8;--tint:#EEF0FC;--tint-v:#F2EEFB;--grad:#3F45BF;--sh-1:0 1px 3px rgba(80,80,200,.07);--sh-2:0 2px 8px rgba(80,80,200,.10)}
+*{box-sizing:border-box}
+.app{position:relative;width:390px;height:844px;display:flex;flex-direction:column;background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:14px;line-height:1.45;overflow:hidden}
+.app h1,.app h2,.app h3,.app p{margin:0}
+:where(.app a){color:inherit}
+.app a{text-decoration:none}
+.main{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:16px;padding:16px}
+.main.flush{padding:0}
+.pad{display:flex;flex-direction:column;gap:16px;padding:0 16px 24px}
+.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.i.sm{width:18px;height:18px}
+.topbar{display:flex;align-items:center;gap:8px;min-height:64px;padding:8px 16px 8px 8px;background:var(--surface);border-bottom:1px solid var(--line)}
+.topbar.nob{padding-left:16px}
+.topbar h1{font-size:18px;font-weight:700;flex:1}
+.back{width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:8px;color:var(--ink)}
+.t-h1{font-size:22px;font-weight:800;letter-spacing:-.01em}
+.sec{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.sec-row{display:flex;align-items:center;justify-content:space-between}
+.link{font-size:13px;font-weight:700;color:var(--blue-d)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;box-shadow:var(--sh-1)}
+.card.np{padding:0;overflow:hidden}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.num{font-variant-numeric:tabular-nums;font-weight:700}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:8px;font-weight:700;font-size:15px;border:0;cursor:pointer;font-family:inherit}
+.btn-p{background:var(--grad);color:#fff}
+.btn-s{background:var(--tint);color:var(--blue-d)}
+.btn-o{background:#fff;border:1px solid var(--line);color:var(--ink);box-shadow:var(--sh-1)}
+.logo{width:64px;height:64px;border-radius:12px;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff}
+.logo .i{width:32px;height:32px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 14px;border-radius:6px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--muted);font-family:inherit;cursor:pointer}
+.chip.on{background:var(--tint);border-color:#CDD3F7;color:var(--blue-d)}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--tint);border-radius:8px;padding:3px;gap:3px}
+.seg button{min-height:40px;border:0;border-radius:6px;background:transparent;font-family:inherit;font-weight:700;font-size:13px;color:var(--muted);cursor:pointer}
+.seg button.on{background:#fff;color:var(--blue-d);box-shadow:0 1px 2px rgba(80,80,200,.12)}
+.seg a{display:flex;align-items:center;justify-content:center;min-height:40px;border-radius:6px;font-weight:700;font-size:13px;color:var(--muted)}
+.seg a.on{background:#fff;color:var(--blue-d);box-shadow:0 1px 2px rgba(80,80,200,.12)}
+.seg.c3{grid-template-columns:repeat(3,1fr)}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mi{position:relative;display:flex;align-items:center;gap:10px;min-height:56px;padding:8px 10px;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:var(--sh-1)}
+.mi .ico{width:36px;height:36px}
+.mi .t{display:block;font-weight:700;font-size:13px;line-height:1.25}
+.mi .d{display:block;font-size:11px;color:var(--muted);line-height:1.3}
+.mi.slot{border:1.5px dashed #B7BCEE;background:transparent;box-shadow:none;justify-content:center;color:var(--muted)}
+.tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:700;white-space:nowrap}
+.tag.late{background:#FFE0E6;color:#9F1239}
+.tag.unpaid{background:#FFE9D5;color:#9A3412}
+.tag.proc{background:#EFE9FF;color:#5B21B6}
+.tag.paid{background:#DDF5EE;color:#0F5F54}
+.tag.neutral{background:var(--tint);color:var(--blue-d)}
+.row{display:flex;align-items:center;gap:12px;min-height:56px;padding:10px 14px;border-top:1px solid var(--line);color:var(--ink)}
+.row:first-child{border-top:0}
+.row .grow{flex:1;min-width:0}
+.row .ttl{font-weight:600}
+.ico{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--tint);color:var(--blue);flex:none}
+.ico.v{background:var(--tint-v);color:var(--violet)}
+.chev{color:#8C91B3}
+.grp{padding:10px 14px 4px;font-size:12px;font-weight:700;color:var(--muted);background:#FAFBFF;border-top:1px solid var(--line)}
+.grp:first-child{border-top:0}
+.slot{display:flex;align-items:center;justify-content:center;gap:8px;min-height:56px;padding:10px 14px;border:1.5px dashed #B7BCEE;border-radius:8px;color:var(--muted);font-size:13px;font-weight:600;text-align:center}
+.slot.in{border-radius:0;border-left:0;border-right:0;border-bottom:0}
+.hero{background:var(--grad);color:#fff;padding:20px 16px 64px;display:flex;flex-direction:column;gap:14px}
+.hero-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.hero-sub{font-size:13px;opacity:.92}
+.hero-name{font-size:20px;font-weight:800}
+.iconbtn{position:relative;width:48px;height:48px;border-radius:8px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;color:#fff}
+.iconbtn .dot{position:absolute;top:10px;right:11px;width:10px;height:10px;border-radius:50%;background:#FFC857;border:2px solid #3F45BF}
+.brandsw{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border-radius:8px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);color:#fff;font-family:inherit;font-weight:600;font-size:13px;cursor:pointer}
+.sum{margin:-48px 16px 0;position:relative;box-shadow:var(--sh-2)}
+.sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sum-box{border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:4px}
+.sum-box.a{background:#FFF3E6}
+.sum-box.b{background:#FFE9ED}
+.sum-box .lbl{font-size:12px;font-weight:700}
+.sum-box.a .lbl{color:#9A3412}
+.sum-box.b .lbl{color:#9F1239}
+.sum-box .amt{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.push{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 14px;box-shadow:var(--sh-2)}
+.push .ttl{font-weight:700}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.tcat{font-size:11px;font-weight:500;color:var(--muted)}
+.tbadge{position:absolute;top:8px;right:8px;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:#BE123C;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:92px;padding:10px 6px;border-radius:8px;background:#fff;border:1px solid var(--line);box-shadow:var(--sh-1);font-size:12px;font-weight:700;text-align:center;line-height:1.25}
+.tile.slot{border:1.5px dashed #B7BCEE;background:transparent;box-shadow:none;font-weight:600}
+.nav{display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-top:1px solid var(--line);padding:6px 8px 14px}
+.nav a{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:52px;color:var(--muted);font-size:11px;font-weight:600}
+.nav a.on{color:var(--violet)}
+.nav a.sep{border-left:1px solid var(--line)}
+.nav a.mid{overflow:visible}
+.nav .mb{width:48px;height:48px;margin-top:-22px;border-radius:12px;background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center;border:4px solid #fff;box-sizing:content-box;box-shadow:0 3px 10px rgba(80,80,200,.28)}
+.nav a.mid.on svg{animation:none}
+.nav a.mid{gap:3px}
+.nav a.mid.on,.nav a.mid{color:var(--violet);font-weight:700}
+.sq{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.sqi{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;min-height:88px;padding:10px 4px 8px;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:var(--sh-1);font-size:11px;font-weight:700;line-height:1.2;text-align:center;color:var(--ink)}
+.sqi .ico{width:38px;height:38px}
+.sqi.slot{justify-content:center;border:1.5px dashed #B7BCEE;background:transparent;box-shadow:none;color:var(--muted);font-weight:600;min-height:88px}
+.sqi .tbadge{top:4px;right:4px;min-width:18px;height:18px;font-size:10px;padding:0 5px}
+.nbadge{position:absolute;top:2px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#BE123C;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:13px;font-weight:700}
+.field input{min-height:48px;padding:0 14px;border-radius:8px;border:1px solid #D2D6F0;background:#fff;font-family:inherit;font-size:15px;color:var(--ink)}
+.field input::placeholder{color:#6B7094}
+.splash{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:32px;text-align:center}
+.bar{width:220px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;width:62%;height:100%;background:var(--grad)}
+.sim{display:flex;flex-direction:column;gap:8px;padding:16px;background:#fff;border-top:1px solid var(--line)}
+.vpill{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 12px;border-radius:6px;background:var(--tint);color:var(--blue-d);font-size:12px;font-weight:700}
+.tog{width:46px;height:28px;border-radius:14px;background:var(--grad);position:relative;flex:none}
+.tog::after{content:'';position:absolute;right:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#fff}
+.avatar{width:64px;height:64px;border-radius:12px;background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800}
+.note{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:8px;background:var(--tint-v);color:#4A2A9C;font-size:13px}
+.kv{display:flex;justify-content:space-between;gap:12px}
+.mono{font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.flow{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.flow::before{content:'';position:absolute;top:22px;left:12%;right:12%;height:2px;background:var(--line)}
+.step{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;padding:4px 2px}
+.step .n{position:relative;z-index:1;width:36px;height:36px;border-radius:8px;background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center;border:3px solid #fff;box-sizing:content-box}
+.step .n.w{background:#C2410C}
+.step .l{font-size:12px;font-weight:700}
+.step .v{font-size:13px;font-weight:800;font-variant-numeric:tabular-nums}
+.bars{display:flex;align-items:flex-end;gap:10px;height:84px}
+.bars div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;height:100%}
+.bars i{display:block;width:100%;border-radius:3px 3px 0 0;background:var(--grad)}
+.bars div.cur i{background:var(--violet)}
+.blabels{display:flex;gap:10px;margin-top:6px}
+.blabels span{flex:1;text-align:center;font-size:11px;color:var(--muted);font-weight:600}
+.gh{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.gh::after{content:'';flex:1;height:1px;background:var(--line)}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mcard{position:relative;display:flex;flex-direction:column;gap:8px;min-height:140px;padding:14px;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:var(--sh-1)}
+.mcard .t{font-weight:800;font-size:15px}
+.mcard .d{font-size:12px;color:var(--muted);line-height:1.4}
+.mcard .go{margin-top:auto;display:flex;align-items:center;gap:2px;color:var(--blue-d);font-size:12px;font-weight:700}
+.lo-toggle{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.lo-toggle:focus-visible ~ .main .btn-keluar{outline:2px solid var(--violet);outline-offset:2px}
+.modal{display:none;position:absolute;inset:0;z-index:10;align-items:center;justify-content:center;padding:24px;background:transparent}
+.lo-toggle:checked ~ .modal{display:flex;animation:fade .2s ease both}
+.dialog{width:100%;display:flex;flex-direction:column;gap:12px;padding:20px;background:#fff;border-radius:10px;border:1px solid var(--line);box-shadow:0 6px 24px rgba(80,80,200,.16);animation:pop .22s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes pop{from{opacity:0;transform:scale(.94) translateY(6px)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes load{from{width:10%}to{width:94%}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,200,87,.7)}70%{box-shadow:0 0 0 8px rgba(255,200,87,0)}100%{box-shadow:0 0 0 0 rgba(255,200,87,0)}}
+.main>*,.pad>*,.splash>*{animation:rise .4s ease both}
+.main>*:nth-child(2),.pad>*:nth-child(2),.splash>*:nth-child(2){animation-delay:.06s}
+.main>*:nth-child(3),.pad>*:nth-child(3),.splash>*:nth-child(3){animation-delay:.12s}
+.main>*:nth-child(4),.pad>*:nth-child(4),.splash>*:nth-child(4){animation-delay:.18s}
+.main>*:nth-child(5),.pad>*:nth-child(5){animation-delay:.24s}
+.main>*:nth-child(6),.pad>*:nth-child(6){animation-delay:.3s}
+.bars i{transform-origin:bottom;animation:grow .7s cubic-bezier(.2,.8,.2,1) .2s both}
+.bar i{width:94%;animation:load 1.8s ease-in-out infinite alternate}
+.iconbtn .dot{animation:pulse 2s infinite}
+.tile,.mi,.mcard,.btn,.row,.chip,.step,.nav a{transition:transform .12s ease,background-color .15s ease}
+.tile:active,.mi:active,.mcard:active,.btn:active,.chip:active,.step:active{transform:scale(.96)}
+.row:active{background:var(--tint)}
+.nav a.on svg{animation:pop .3s ease both}
+@media (prefers-reduced-motion:reduce){.app,.app *{animation:none!important;transition:none!important}}
+.dialog h2{font-size:18px;font-weight:800}
+.dialog .btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+
+.me{width:40px;height:40px;border-radius:8px;background:var(--tint-v);color:var(--violet-d);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;border:1px solid #DCD3F3;flex:none}
+.menucard{display:flex;flex-direction:column;gap:12px;padding:14px 12px}
+.menucard>div+div{border-top:1px solid var(--line);padding-top:12px}
+.cat{margin:0 0 8px 4px!important;font-size:12px;font-weight:700;color:var(--muted)}
+.menucard .sqi{border:0;box-shadow:none;background:transparent;min-height:72px;padding:4px 2px}
+.menucard .sqi.slot{border:1.5px dashed #B7BCEE}
+.menucard .sqi .tbadge{top:0;right:6px}
+
+/* ---- layar cek versi ---- */
+.vplain{display:flex;align-items:center;justify-content:center;gap:6px;margin:0;color:var(--muted);font-size:12px;font-weight:600;background:none}
+.vplain .i{color:#0F766E}
+.app.sp2{background:#FBFBFF;padding:0 24px 22px}
+.sp2-brand{display:flex;align-items:center;gap:10px;min-height:68px;flex:none;animation:fade .5s ease both}
+.sp2-brand .mk{width:34px;height:34px;border-radius:8px;background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center}
+.sp2-brand .mk .i{width:20px;height:20px}
+.sp2-brand b{font-size:13px;letter-spacing:.14em;font-weight:800}
+.sp2-art{flex:1;min-height:150px;display:flex;align-items:center;justify-content:center}
+.sp2-art svg{width:100%;height:100%;max-height:330px}
+.net-ring{fill:none;stroke:#E3E6F8;stroke-width:1.2}
+.net-base{stroke:#C8CEF2;stroke-width:2;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;animation:drawl .8s ease forwards;animation-delay:var(--d)}
+.net-flow{stroke:var(--blue);stroke-width:2.4;stroke-linecap:round;stroke-dasharray:3 9;opacity:0;animation:fade .4s ease forwards,flow 1.2s linear infinite;animation-delay:calc(var(--d) + .7s),calc(var(--d) + .7s)}
+.net-nd{transform-box:fill-box;transform-origin:center;opacity:0;animation:npop .45s cubic-bezier(.2,.9,.3,1.3) forwards;animation-delay:var(--d)}
+.net-nd circle{fill:#fff;stroke:var(--blue);stroke-width:2}
+.net-nd path{fill:none;stroke:var(--blue);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.net-nd.v circle{stroke:var(--violet)}
+.net-nd.v path{stroke:var(--violet)}
+.net-hub{transform-box:fill-box;transform-origin:center;animation:npop .5s cubic-bezier(.2,.9,.3,1.3) .1s both}
+.net-hub circle{fill:var(--blue)}
+.net-hub path{fill:none;stroke:#fff;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.net-pulse{fill:none;stroke:var(--blue);stroke-width:2;transform-box:fill-box;transform-origin:center;opacity:0;animation:pulse2 2.6s ease-out .9s infinite}
+@keyframes drawl{to{stroke-dashoffset:0}}
+@keyframes flow{to{stroke-dashoffset:-12}}
+@keyframes npop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+@keyframes pulse2{0%{opacity:.5;transform:scale(1)}100%{opacity:0;transform:scale(2.4)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeout{to{opacity:0}}
+@keyframes fillbar{to{width:100%}}
+.sp2-title{flex:none;font-size:34px;line-height:1.08;font-weight:800;letter-spacing:-.02em;animation:rise .6s ease .3s both}
+.sp2-title span{color:var(--blue)}
+.sp2-desc{flex:none;margin-top:10px;max-width:320px;color:var(--muted);animation:rise .6s ease .45s both}
+.sp2-ver{flex:none;margin-top:20px;padding-top:14px;border-top:1px solid var(--line);animation:rise .6s ease .6s both}
+.sp2-vh{display:flex;justify-content:space-between;align-items:center}
+.sp2-state{position:relative;height:20px;min-width:150px}
+.sp2-state>span{position:absolute;right:0;top:0;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;white-space:nowrap}
+.sp2-state .s1{color:var(--muted);animation:fadeout .3s ease 2.6s forwards}
+.sp2-state .s2{color:#0F766E;opacity:0;animation:fade .4s ease 2.8s forwards}
+.mini-spin{display:block;width:12px;height:12px;border-radius:50%;border:2px solid #D5D9F2;border-top-color:var(--blue);animation:spin .8s linear infinite}
+.sp2-num{font-size:44px;line-height:1.1;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:2px}
+.sp2-line{height:3px;border-radius:2px;background:var(--line);overflow:hidden;margin-top:8px}
+.sp2-line i{display:block;height:100%;width:0;background:var(--grad);animation:fillbar 2.6s cubic-bezier(.4,0,.2,1) .3s forwards}
+.sp2-go{flex:none;margin-top:18px;opacity:0;animation:fade .4s ease 3s forwards}
+@media (prefers-reduced-motion:reduce){.sp2-go,.net-nd,.net-flow,.sp2-state .s2{opacity:1!important}.net-base{stroke-dashoffset:0!important}.sp2-state .s1{display:none}.sp2-line i{width:100%!important}}
+
+html,body{margin:0;height:100%}
+body{background:#F1F3FE;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+.phone{position:relative;width:406px;height:min(860px,calc(100vh - 24px));background:#fff;border-radius:24px;border:8px solid #FFFFFF;box-sizing:border-box;overflow:hidden;box-shadow:0 2px 6px rgba(80,80,200,.08),0 8px 24px rgba(80,80,200,.10)}
+.screen{width:100%;height:100%}
+.screen[hidden]{display:none}
+.screen .app{width:100%;height:100%}
+button{font-family:inherit}
+@media (max-width:440px){
+ body{background:#F9FAFF;display:block}
+ .phone{width:100%;height:100vh;height:100dvh;border:0;border-radius:0;box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+<section class="screen" id="Main" hidden>
+
+<div class="app sp2">
+<div class="sp2-brand">
+<span class="mk"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg></span>
+<b>BALI MURNI</b>
+</div>
+<div class="sp2-art">
+<svg viewBox="0 0 342 340" aria-hidden="true">
+<circle class="net-ring" cx="171" cy="170" r="72"/>
+<circle class="net-ring" cx="171" cy="170" r="122"/>
+<g>
+<line class="net-base" pathLength="100" x1="171" y1="170" x2="58" y2="62" style="--d:.3s"/>
+<line class="net-base" pathLength="100" x1="171" y1="170" x2="286" y2="58" style="--d:.45s"/>
+<line class="net-base" pathLength="100" x1="171" y1="170" x2="306" y2="206" style="--d:.6s"/>
+<line class="net-base" pathLength="100" x1="171" y1="170" x2="196" y2="306" style="--d:.75s"/>
+<line class="net-base" pathLength="100" x1="171" y1="170" x2="46" y2="236" style="--d:.9s"/>
+<line class="net-flow" x1="171" y1="170" x2="58" y2="62" style="--d:.3s"/>
+<line class="net-flow" x1="171" y1="170" x2="286" y2="58" style="--d:.45s"/>
+<line class="net-flow" x1="171" y1="170" x2="306" y2="206" style="--d:.6s"/>
+<line class="net-flow" x1="171" y1="170" x2="196" y2="306" style="--d:.75s"/>
+<line class="net-flow" x1="171" y1="170" x2="46" y2="236" style="--d:.9s"/>
+</g>
+<g class="net-nd" style="--d:.9s"><circle cx="58" cy="62" r="21"/><path transform="translate(47.8 51.8) scale(.85)" d="M4 9l1.5-5h13L20 9M4 9h16M5 9v11h14V9M10 20v-5h4v5"/></g>
+<g class="net-nd v" style="--d:1.05s"><circle cx="286" cy="58" r="21"/><path transform="translate(275.8 47.8) scale(.85)" d="M4 9l1.5-5h13L20 9M4 9h16M5 9v11h14V9M10 20v-5h4v5"/></g>
+<g class="net-nd" style="--d:1.2s"><circle cx="306" cy="206" r="21"/><path transform="translate(295.8 195.8) scale(.85)" d="M4 9l1.5-5h13L20 9M4 9h16M5 9v11h14V9M10 20v-5h4v5"/></g>
+<g class="net-nd v" style="--d:1.35s"><circle cx="196" cy="306" r="21"/><path transform="translate(185.8 295.8) scale(.85)" d="M4 9l1.5-5h13L20 9M4 9h16M5 9v11h14V9M10 20v-5h4v5"/></g>
+<g class="net-nd" style="--d:1.5s"><circle cx="46" cy="236" r="21"/><path transform="translate(35.8 225.8) scale(.85)" d="M4 9l1.5-5h13L20 9M4 9h16M5 9v11h14V9M10 20v-5h4v5"/></g>
+<circle class="net-pulse" cx="171" cy="170" r="36"/>
+<g class="net-hub"><circle cx="171" cy="170" r="36"/><path transform="translate(153 152) scale(1.5)" d="M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8"/></g>
+</svg>
+</div>
+<h1 class="sp2-title">Portal<br><span>Distributor</span></h1>
+<p class="sp2-desc">Pantau PO, sell out, klaim rafaksi, dan retur dari Bali Murni dalam satu tempat.</p>
+<div class="sp2-ver">
+<div class="sp2-vh">
+<span class="small b muted">Versi aplikasi</span>
+<span class="sp2-state" role="status">
+<span class="s1"><i class="mini-spin"></i>Memeriksa versi…</span>
+<span class="s2"><svg class="i sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Sudah terbaru</span>
+</span>
+</div>
+<p class="sp2-num">1.2.0</p>
+<div class="sp2-line"><i></i></div>
+</div>
+<a class="btn btn-p sp2-go" href="#Login">Lanjutkan</a>
+</div>
+</section>
+<section class="screen" id="Update" hidden>
+
+<div class="app">
+<div class="splash">
+<div class="logo" style="background:var(--tint-v);color:var(--violet)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg></div>
+<div>
+<h1 style="font-size:22px;font-weight:800">Pembaruan diperlukan</h1>
+<p class="muted" style="margin-top:8px">Versi 1.0.0 tidak lagi didukung. Perbarui ke versi 1.2.0 agar Anda bisa masuk dan data tetap sesuai ERP.</p>
+</div>
+<div class="card" style="width:100%;text-align:left;display:flex;flex-direction:column;gap:8px">
+<div class="kv"><span class="muted">Versi terpasang</span><span class="num">1.0.0</span></div>
+<div class="kv"><span class="muted">Versi minimum</span><span class="num">1.2.0</span></div>
+</div>
+<a class="btn btn-p" style="width:100%" href="#Main">Perbarui sekarang</a>
+<p class="muted small">Masuk dikunci sampai pembaruan selesai.</p>
+</div>
+</div>
+</section>
+<section class="screen" id="Login" hidden>
+
+<div class="app">
+<div class="main" style="justify-content:center;gap:24px;padding:24px">
+<div style="display:flex;flex-direction:column;gap:16px;align-items:flex-start">
+<div class="logo"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg></div>
+<div>
+<h1 class="t-h1">Masuk sebagai distributor</h1>
+<p class="muted" style="margin-top:6px">Satu akun untuk setiap distributor. Anda hanya melihat brand dan outlet milik Anda.</p>
+</div>
+</div>
+<div class="card" style="display:flex;flex-direction:column;gap:16px">
+<div class="field">
+<label for="uid">ID distributor atau email</label>
+<input id="uid" type="text" placeholder="contoh: DST-0001">
+</div>
+<div class="field">
+<label for="pwd">Kata sandi</label>
+<input id="pwd" type="password" placeholder="Masukkan kata sandi">
+</div>
+<a class="btn btn-p" href="#Beranda">Masuk</a>
+<a class="link" style="text-align:center;display:block;padding:8px 0" href="#Login">Lupa kata sandi?</a>
+</div>
+</div>
+<p class="vplain" style="padding:0 16px 24px"><svg class="i sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Versi 1.2.0 · sudah terbaru</p>
+</div>
+</section>
+<section class="screen" id="Beranda" hidden>
+
+<div class="app">
+<div class="main flush">
+<header class="hero">
+<div class="hero-top">
+<div>
+<p class="hero-sub">Selamat sore</p>
+<h1 class="hero-name">Distributor Contoh</h1>
+</div>
+<a class="iconbtn" href="#Peringatan" aria-label="Notifikasi, 3 baru"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21a2 2 0 0 0 4 0"/></svg><span class="dot"></span></a>
+</div>
+<button class="brandsw" type="button">Brand: Semua (2)<svg class="i sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+</header>
+<section class="card sum" aria-label="Ringkasan klaim">
+<div class="sum-grid">
+<div class="sum-box a">
+<span class="lbl">Klaim belum dibayar</span>
+<span class="amt">Rp 48.500.000</span>
+<span class="small muted">3 klaim rafaksi</span>
+</div>
+<div class="sum-box b">
+<span class="lbl">Lewat jatuh tempo</span>
+<span class="amt">Rp 12.250.000</span>
+<span class="small muted">1 klaim rafaksi</span>
+</div>
+</div>
+<div class="sec-row" style="margin-top:12px;gap:12px">
+<p class="small muted">Peringatan hilang otomatis setelah klaim dibayar.</p>
+<a class="link" href="#Peringatan" style="white-space:nowrap">Detail</a>
+</div>
+</section>
+<div class="pad" style="margin-top:16px">
+<section style="display:flex;flex-direction:column;gap:10px" aria-label="Notifikasi push">
+<h2 class="sec">Notifikasi</h2>
+<div class="push">
+<div class="ico v"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></div>
+<div style="flex:1;min-width:0">
+<p class="ttl">Klaim rafaksi segera jatuh tempo</p>
+<p class="muted small" style="margin-top:2px">KR-2611-019 jatuh tempo 28 Nov 2026.</p>
+</div>
+<span class="muted small" style="white-space:nowrap">10 mnt</span>
+</div>
+<div class="slot">Slot notifikasi push · pesan baru tampil di sini</div>
+</section>
+<section style="display:flex;flex-direction:column;gap:10px" aria-label="Menu">
+<h2 class="sec">Menu</h2>
+<div class="card menucard">
+<div><p class="cat">Transaksi</p><div class="sq">
+<a class="sqi" href="#PO"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg></span>Daftar PO</a>
+<a class="sqi" href="#SellOut"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>Sell Out</a>
+</div></div>
+<div><p class="cat">Keuangan</p><div class="sq">
+<a class="sqi" href="#Transfer"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg></span>Bukti Transfer</a>
+<a class="sqi" href="#Peringatan"><span class="tbadge" aria-label="1 lewat jatuh tempo">1</span><span class="ico v"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M15 9.5c-.5-1-1.5-1.5-3-1.5s-3 .8-3 2 1.5 1.8 3 2 3 .8 3 2-1.5 2-3 2-2.5-.5-3-1.5"/></svg></span>Klaim Rafaksi</a>
+<a class="sqi" href="#Retur"><span class="ico v"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></span>Retur</a>
+</div></div>
+<div><p class="cat">Segera hadir</p><div class="sq">
+<div class="sqi slot"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Menu baru</div>
+<div class="sqi slot"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Menu baru</div>
+</div></div>
+</div>
+</section>
+<section style="display:flex;flex-direction:column;gap:10px" aria-label="Sell out per minggu">
+<div class="sec-row">
+<h2 class="sec">Sell out per minggu</h2>
+<a class="link" href="#SellOut">Detail</a>
+</div>
+<div class="card">
+<p class="num mono" style="font-size:22px;font-weight:800">Rp 186.400.000</p>
+<p class="muted small" style="margin-bottom:12px">Total Nov 2026 · 5 outlet</p>
+<div class="bars" role="img" aria-label="Sell out minggu 1 sampai 4: Rp 38,2 juta, Rp 52 juta, Rp 46,5 juta, Rp 49,7 juta">
+<div><i style="height:59px"></i></div>
+<div><i style="height:80px"></i></div>
+<div><i style="height:72px"></i></div>
+<div class="cur"><i style="height:76px"></i></div>
+</div>
+<div class="blabels"><span>M1 · 38,2 jt</span><span>M2 · 52 jt</span><span>M3 · 46,5 jt</span><span>M4 · 49,7 jt</span></div>
+</div>
+</section>
+<section style="display:flex;flex-direction:column;gap:10px" aria-label="Aktivitas terbaru">
+<h2 class="sec">Aktivitas terbaru</h2>
+<div class="card np">
+<a class="row" href="#Transfer"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg></span><span class="grow"><span class="ttl">Transfer diterima Rp 24.350.000</span><br><span class="muted small">INV/DST/2611/0087 · 24 Nov</span></span><svg class="i sm chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+<a class="row" href="#PO"><span class="ico"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg></span><span class="grow"><span class="ttl">PO-2611-0031 dibuat</span><br><span class="muted small">Brand A · Rp 38.000.000 · 24 Nov</span></span><svg class="i sm chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+<a class="row" href="#Peringatan"><span class="ico v"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span><span class="grow"><span class="ttl">Klaim KR-2610-031 dibayar</span><br><span class="muted small">Rp 9.800.000 · 20 Nov</span></span><svg class="i sm chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+</div>
+</section>
+</div>
+</div>
+<nav class="nav" aria-label="Navigasi utama">
+<a class="on" href="#Beranda"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Beranda</a>
+<a href="#PO"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>PO</a>
+<a href="#SellOut"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Sell Out</a>
+<a href="#Transfer"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 7l2-3h12M16 14h2"/></svg><span class="nbadge">1</span>Keuangan</a>
+<a class="sep" href="#Akun"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg>Akun saya</a>
+</nav>
+</div>
+</section>
+<section class="screen" id="SellOut" hidden>
+
+<div class="app">
+<div class="topbar nob">
+<h1>Sell Out</h1>
+<button class="chip" type="button">Nov 2026<svg class="i sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+</div>
+<div class="main">
+<div class="chips">
+<button class="chip on" type="button">Semua brand</button>
+<button class="chip" type="button">Brand A</button>
+<button class="chip" type="button">Brand B</button>
+</div>
+<div class="seg">
+<button class="on" type="button">Per outlet</button>
+<button type="button">Per brand</button>
+</div>
+<div class="card" style="display:flex;flex-direction:column;gap:2px">
+<span class="muted small" style="font-weight:700">Total sell out · Nov 2026</span>
+<span style="font-size:26px;font-weight:800" class="mono">Rp 186.400.000</span>
+<span class="muted small">4.280 pcs · 5 outlet</span>
+</div>
+<div class="card np">
+<div class="row"><div class="grow"><p class="ttl">OUT-001 · Outlet Contoh 1</p><p class="muted small">Brand A</p></div><div style="text-align:right"><p class="num">Rp 52.300.000</p><p class="muted small">1.120 pcs</p></div></div>
+<div class="row"><div class="grow"><p class="ttl">OUT-002 · Outlet Contoh 2</p><p class="muted small">Brand A</p></div><div style="text-align:right"><p class="num">Rp 41.800.000</p><p class="muted small">960 pcs</p></div></div>
+<div class="row"><div class="grow"><p class="ttl">OUT-003 · Outlet Contoh 3</p><p class="muted small">Brand B</p></div><div style="text-align:right"><p class="num">Rp 38.100.000</p><p class="muted small">870 pcs</p></div></div>
+<div class="row"><div class="grow"><p class="ttl">OUT-004 · Outlet Contoh 4</p><p class="muted small">Brand B</p></div><div style="text-align:right"><p class="num">Rp 33.900.000</p><p class="muted small">780 pcs</p></div></div>
+<div class="row"><div class="grow"><p class="ttl">OUT-005 · Outlet Contoh 5</p><p class="muted small">Brand A</p></div><div style="text-align:right"><p class="num">Rp 20.300.000</p><p class="muted small">550 pcs</p></div></div>
+</div>
+<div class="note"><svg class="i sm" viewBox="0 0 24 24" aria-hidden="true" style="margin-top:2px"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Kolom mengikuti format data ERP: kode outlet, brand, qty, nilai.</span></div>
+<button class="btn btn-s" type="button">Unduh format ERP</button>
+</div>
+<nav class="nav" aria-label="Navigasi utama">
+<a href="#Beranda"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Beranda</a>
+<a href="#PO"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>PO</a>
+<a class="on" href="#SellOut"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Sell Out</a>
+<a href="#Transfer"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 7l2-3h12M16 14h2"/></svg><span class="nbadge">1</span>Keuangan</a>
+<a class="sep" href="#Akun"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg>Akun saya</a>
+</nav>
+</div>
+</section>
+<section class="screen" id="Transfer" hidden>
+
+<div class="app">
+<div class="topbar nob">
+<h1>Keuangan</h1>
+</div>
+<div class="main">
+<div class="seg c3">
+<a class="on" href="#Transfer">Transfer</a>
+<a href="#Peringatan">Klaim</a>
+<a href="#Retur">Retur</a>
+</div>
+<div class="note"><svg class="i sm" viewBox="0 0 24 24" aria-hidden="true" style="margin-top:2px"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Transfer dari Bali Murni. Nomor invoice mengikuti invoice supplier (distributor), bukan nomor internal ERP.</span></div>
+<div class="chips">
+<button class="chip on" type="button">Semua brand</button>
+<button class="chip" type="button">Brand A</button>
+<button class="chip" type="button">Brand B</button>
+</div>
+<article class="card" style="display:flex;flex-direction:column;gap:10px">
+<div class="sec-row"><span class="muted small" style="font-weight:700">24 Nov 2026</span><span class="tag neutral">Brand A</span></div>
+<p style="font-size:22px;font-weight:800" class="mono">Rp 24.350.000</p>
+<div class="kv"><span class="muted small">No. invoice supplier</span><span class="num mono small">INV/DST/2611/0087</span></div>
+<a class="btn btn-s" href="#Transfer">Lihat bukti transfer</a>
+</article>
+<article class="card" style="display:flex;flex-direction:column;gap:10px">
+<div class="sec-row"><span class="muted small" style="font-weight:700">18 Nov 2026</span><span class="tag neutral">Brand B</span></div>
+<p style="font-size:22px;font-weight:800" class="mono">Rp 17.900.000</p>
+<div class="kv"><span class="muted small">No. invoice supplier</span><span class="num mono small">INV/DST/2611/0079</span></div>
+<a class="btn btn-s" href="#Transfer">Lihat bukti transfer</a>
+</article>
+<article class="card" style="display:flex;flex-direction:column;gap:10px">
+<div class="sec-row"><span class="muted small" style="font-weight:700">05 Nov 2026</span><span class="tag neutral">Brand A</span></div>
+<p style="font-size:22px;font-weight:800" class="mono">Rp 31.200.000</p>
+<div class="kv"><span class="muted small">No. invoice supplier</span><span class="num mono small">INV/DST/2611/0062</span></div>
+<a class="btn btn-s" href="#Transfer">Lihat bukti transfer</a>
+</article>
+</div>
+<nav class="nav" aria-label="Navigasi utama">
+<a href="#Beranda"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Beranda</a>
+<a href="#PO"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>PO</a>
+<a href="#SellOut"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Sell Out</a>
+<a class="on" href="#Transfer"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 7l2-3h12M16 14h2"/></svg><span class="nbadge">1</span>Keuangan</a>
+<a class="sep" href="#Akun"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg>Akun saya</a>
+</nav>
+</div>
+</section>
+<section class="screen" id="PO" hidden>
+
+<div class="app">
+<div class="topbar nob">
+<h1>Daftar PO</h1>
+</div>
+<div class="main">
+<p class="muted">PO yang dibuat untuk distributor Anda.</p>
+<div class="chips">
+<button class="chip on" type="button">Semua</button>
+<button class="chip" type="button">Dibuat</button>
+<button class="chip" type="button">Dikirim</button>
+<button class="chip" type="button">Selesai</button>
+</div>
+<article class="card" style="display:flex;flex-direction:column;gap:8px">
+<div class="sec-row"><span class="num mono">PO-2611-0031</span><span class="tag neutral">Dibuat</span></div>
+<div class="kv"><span class="muted small">24 Nov 2026 · Brand A</span><span class="muted small">12 item</span></div>
+<p class="num mono" style="font-size:18px">Rp 38.000.000</p>
+</article>
+<article class="card" style="display:flex;flex-direction:column;gap:8px">
+<div class="sec-row"><span class="num mono">PO-2611-0027</span><span class="tag proc">Dikirim</span></div>
+<div class="kv"><span class="muted small">19 Nov 2026 · Brand B</span><span class="muted small">8 item</span></div>
+<p class="num mono" style="font-size:18px">Rp 21.450.000</p>
+</article>
+<article class="card" style="display:flex;flex-direction:column;gap:8px">
+<div class="sec-row"><span class="num mono">PO-2611-0018</span><span class="tag paid">Selesai</span></div>
+<div class="kv"><span class="muted small">08 Nov 2026 · Brand A</span><span class="muted small">15 item</span></div>
+<p class="num mono" style="font-size:18px">Rp 44.700.000</p>
+</article>
+<article class="card" style="display:flex;flex-direction:column;gap:8px">
+<div class="sec-row"><span class="num mono">PO-2610-0092</span><span class="tag paid">Selesai</span></div>
+<div class="kv"><span class="muted small">29 Okt 2026 · Brand B</span><span class="muted small">6 item</span></div>
+<p class="num mono" style="font-size:18px">Rp 15.300.000</p>
+</article>
+</div>
+<nav class="nav" aria-label="Navigasi utama">
+<a href="#Beranda"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Beranda</a>
+<a class="on" href="#PO"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>PO</a>
+<a href="#SellOut"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Sell Out</a>
+<a href="#Transfer"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 7l2-3h12M16 14h2"/></svg><span class="nbadge">1</span>Keuangan</a>
+<a class="sep" href="#Akun"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg>Akun saya</a>
+</nav>
+</div>
+</section>
+<section class="screen" id="Peringatan" hidden>
+
+<div class="app">
+<div class="topbar nob"><h1>Keuangan</h1></div>
+<div class="main">
+<div class="seg c3">
+<a href="#Transfer">Transfer</a>
+<a class="on" href="#Peringatan">Klaim</a>
+<a href="#Retur">Retur</a>
+</div>
+<div class="sum-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div class="sum-box a">
+<span class="lbl">Klaim belum dibayar</span>
+<span class="amt">Rp 48.500.000</span>
+<span class="small muted">3 klaim</span>
+</div>
+<div class="sum-box b">
+<span class="lbl">Lewat jatuh tempo</span>
+<span class="amt">Rp 12.250.000</span>
+<span class="small muted">1 klaim</span>
+</div>
+</div>
+<section style="display:flex;flex-direction:column;gap:10px" aria-label="Klaim rafaksi">
+<h2 class="sec">Klaim rafaksi</h2>
+<div class="chips">
+<button class="chip on" type="button">Semua</button>
+<button class="chip" type="button">Belum dibayar</button>
+<button class="chip" type="button">Diproses</button>
+<button class="chip" type="button">Dibayar</button>
+</div>
+<div class="card np">
+<div class="row"><div class="grow"><p class="ttl">KR-2611-014 · Brand A</p><p class="muted small">Jatuh tempo 18 Nov 2026</p></div><div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="num mono">Rp 12.250.000</span><span class="tag late">Lewat tempo</span></div></div>
+<div class="row"><div class="grow"><p class="ttl">KR-2611-019 · Brand B</p><p class="muted small">Jatuh tempo 28 Nov 2026</p></div><div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="num mono">Rp 20.000.000</span><span class="tag unpaid">Belum dibayar</span></div></div>
+<div class="row"><div class="grow"><p class="ttl">KR-2611-022 · Brand A</p><p class="muted small">Jatuh tempo 05 Des 2026</p></div><div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="num mono">Rp 16.250.000</span><span class="tag unpaid">Belum dibayar</span></div></div>
+<div class="row"><div class="grow"><p class="ttl">KR-2611-020 · Brand B</p><p class="muted small">Diajukan 20 Nov 2026</p></div><div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="num mono">Rp 7.500.000</span><span class="tag proc">Sedang diproses</span></div></div>
+<div class="row"><div class="grow"><p class="ttl">KR-2610-031 · Brand A</p><p class="muted small">Dibayar 20 Nov 2026</p></div><div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="num mono">Rp 9.800.000</span><span class="tag paid">Sudah dibayar</span></div></div>
+</div>
+<div class="note"><svg class="i sm" viewBox="0 0 24 24" aria-hidden="true" style="margin-top:2px"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Peringatan hilang otomatis setelah klaim dibayar.</span></div>
+</section>
+</div>
+<nav class="nav" aria-label="Navigasi utama">
+<a href="#Beranda"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Beranda</a>
+<a href="#PO"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>PO</a>
+<a href="#SellOut"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Sell Out</a>
+<a class="on" href="#Transfer"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 7l2-3h12M16 14h2"/></svg><span class="nbadge">1</span>Keuangan</a>
+<a class="sep" href="#Akun"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg>Akun saya</a>
+</nav>
+</div>
+</section>
+<section class="screen" id="Retur" hidden>
+
+<div class="app">
+<div class="topbar nob"><h1>Keuangan</h1></div>
+<div class="main">
+<div class="seg c3">
+<a href="#Transfer">Transfer</a>
+<a href="#Peringatan">Klaim</a>
+<a class="on" href="#Retur">Retur</a>
+</div>
+<div class="sum-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div class="sum-box a">
+<span class="lbl">Retur belum settle</span>
+<span class="amt">Rp 8.500.000</span>
+<span class="small muted">2 retur</span>
+</div>
+<div class="sum-box b">
+<span class="lbl">Lewat jatuh tempo</span>
+<span class="amt">Rp 5.100.000</span>
+<span class="small muted">1 retur</span>
+</div>
+</div>
+<section style="display:flex;flex-direction:column;gap:10px" aria-label="Retur belum settle">
+<h2 class="sec">Retur belum settle</h2>
+<div class="card np">
+<div class="row"><div class="grow"><p class="ttl">RT-2611-001 · Brand A</p><p class="muted small">Jatuh tempo 21 Nov 2026</p></div><div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="num mono">Rp 5.100.000</span><span class="tag late">Lewat tempo</span></div></div>
+<div class="row"><div class="grow"><p class="ttl">RT-2611-003 · Brand B</p><p class="muted small">Jatuh tempo 30 Nov 2026</p></div><div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="num mono">Rp 3.400.000</span><span class="tag unpaid">Belum settle</span></div></div>
+</div>
+<div class="note"><svg class="i sm" viewBox="0 0 24 24" aria-hidden="true" style="margin-top:2px"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Jatuh tempo dan penyelesaian retur dicatat di ERP. Peringatan hilang otomatis setelah retur settle.</span></div>
+</section>
+</div>
+<nav class="nav" aria-label="Navigasi utama">
+<a href="#Beranda"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Beranda</a>
+<a href="#PO"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>PO</a>
+<a href="#SellOut"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Sell Out</a>
+<a class="on" href="#Transfer"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 7l2-3h12M16 14h2"/></svg><span class="nbadge">1</span>Keuangan</a>
+<a class="sep" href="#Akun"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg>Akun saya</a>
+</nav>
+</div>
+</section>
+<section class="screen" id="Akun" hidden>
+
+<div class="app">
+<input class="lo-toggle" type="checkbox" id="lo" aria-label="Tampilkan konfirmasi keluar">
+<div class="topbar nob">
+<h1>Akun saya</h1>
+<span class="vpill"><svg class="i sm" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Pribadi</span>
+</div>
+<div class="main">
+<section class="card" style="display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;gap:14px">
+<div class="avatar" aria-hidden="true">DC</div>
+<div>
+<h2 style="font-size:18px;font-weight:800">Distributor Contoh</h2>
+<p class="muted small">ID DST-0001</p>
+</div>
+</div>
+<div>
+<p class="sec" style="margin-bottom:8px">Brand Anda</p>
+<div class="chips"><span class="tag neutral">Brand A</span><span class="tag neutral">Brand B</span></div>
+<p class="muted small" style="margin-top:8px">Hanya brand dan outlet milik Anda yang tampil.</p>
+</div>
+</section>
+<section style="display:flex;flex-direction:column;gap:10px" aria-label="Keamanan">
+<h2 class="sec">Keamanan</h2>
+<div class="card np">
+<a class="row" href="#Akun"><span class="ico v"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="grow"><span class="ttl">Ubah kata sandi</span></span><svg class="i sm chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+</div>
+</section>
+<section style="display:flex;flex-direction:column;gap:10px" aria-label="Preferensi">
+<h2 class="sec">Preferensi</h2>
+<div class="card np">
+<div class="row"><span class="ico v"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></span><span class="grow"><span class="ttl">Notifikasi push</span><br><span class="muted small">Klaim, retur, dan pesan baru</span></span><span class="tog" role="img" aria-label="Aktif"></span></div>
+</div>
+</section>
+<section style="display:flex;flex-direction:column;gap:10px" aria-label="Tentang">
+<h2 class="sec">Tentang</h2>
+<div class="card np">
+<div class="row"><span class="ico v"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg></span><span class="grow"><span class="ttl">Versi aplikasi</span><br><span class="muted small">1.2.0</span></span><span class="tag paid">Terbaru</span></div>
+<a class="row" href="#Akun"><span class="ico v"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/></svg></span><span class="grow"><span class="ttl">Bantuan</span></span><svg class="i sm chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+</div>
+</section>
+<label class="btn btn-o btn-keluar" for="lo">Keluar</label>
+</div>
+<nav class="nav" aria-label="Navigasi utama">
+<a href="#Beranda"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Beranda</a>
+<a href="#PO"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>PO</a>
+<a href="#SellOut"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Sell Out</a>
+<a href="#Transfer"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 7l2-3h12M16 14h2"/></svg><span class="nbadge">1</span>Keuangan</a>
+<a class="sep on" href="#Akun"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg>Akun saya</a>
+</nav>
+<div class="modal" role="dialog" aria-modal="true" aria-labelledby="lo-title">
+<div class="dialog">
+<h2 id="lo-title">Keluar dari akun?</h2>
+<p class="muted">Anda perlu masuk lagi untuk melihat data distributor.</p>
+<div class="btns">
+<label class="btn btn-o" for="lo">Batal</label>
+<a class="btn btn-p" href="#Login">Ya, keluar</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script>
+function show(){
+  var id=(location.hash||'#Main').slice(1);
+  var found=false;
+  document.querySelectorAll('.lo-toggle').forEach(function(c){c.checked=false;});
+  document.querySelectorAll('.screen').forEach(function(s){
+    var on=s.id===id; s.hidden=!on; if(on){found=true;var m=s.querySelector('.main');if(m)m.scrollTop=0;}
+  });
+  if(!found){document.getElementById('Main').hidden=false;}
+}
+window.addEventListener('hashchange',show);
+show();
+</script>
+</body>
+</html>
